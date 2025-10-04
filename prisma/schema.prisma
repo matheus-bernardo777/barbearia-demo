@@ -1,11 +1,83 @@
 generator client { provider = "prisma-client-js" }
+
 datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
-model User { id Int @id @default(autoincrement()) name String email String @unique phone String? role Role @default(CUSTOMER) password String barber Barber? appointments Appointment[] @relation("customerAppointments") createdAt DateTime @default(now()) updatedAt DateTime @updatedAt }
-model Barber { id Int @id @default(autoincrement()) user User @relation(fields:[userId],references:[id]) userId Int @unique bio String? photoUrl String? services BarberService[] timeOffs TimeOff[] appointments Appointment[] @relation("barberAppointments") }
-model Service { id Int @id @default(autoincrement()) name String durationMin Int priceCents Int bufferMin Int @default(10) active Boolean @default(true) barbers BarberService[] appointments Appointment[] }
-model BarberService { barber Barber @relation(fields:[barberId],references:[id]) barberId Int service Service @relation(fields:[serviceId],references:[id]) serviceId Int @@id([barberId,serviceId]) }
-model BusinessHour { id Int @id @default(autoincrement()) weekday Int openMin Int closeMin Int }
-model TimeOff { id Int @id @default(autoincrement()) barber Barber @relation(fields:[barberId],references:[id]) barberId Int start DateTime end DateTime reason String? }
-model Appointment { id Int @id @default(autoincrement()) customer User @relation("customerAppointments",fields:[customerId],references:[id]) customerId Int barber Barber @relation("barberAppointments",fields:[barberId],references:[id]) barberId Int service Service @relation(fields:[serviceId],references:[id]) serviceId Int start DateTime end DateTime status ApptStatus @default(BOOKED) createdAt DateTime @default(now()) updatedAt DateTime @updatedAt @@index([barberId,start]) @@index([customerId,start]) }
+
+model User {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  phone        String?
+  role         Role          @default(CUSTOMER)
+  password     String
+  barber       Barber?
+  appointments Appointment[] @relation("customerAppointments")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Barber {
+  id           Int           @id @default(autoincrement())
+  user         User          @relation(fields: [userId], references: [id])
+  userId       Int           @unique
+  bio          String?
+  photoUrl     String?
+  services     BarberService[]
+  timeOffs     TimeOff[]
+  appointments Appointment[] @relation("barberAppointments")
+}
+
+model Service {
+  id           Int           @id @default(autoincrement())
+  name         String
+  durationMin  Int
+  priceCents   Int
+  bufferMin    Int           @default(10)
+  active       Boolean       @default(true)
+  barbers      BarberService[]
+  appointments Appointment[]
+}
+
+model BarberService {
+  barber    Barber  @relation(fields: [barberId], references: [id])
+  barberId  Int
+  service   Service @relation(fields: [serviceId], references: [id])
+  serviceId Int
+  @@id([barberId, serviceId])
+}
+
+model BusinessHour {
+  id       Int @id @default(autoincrement())
+  weekday  Int
+  openMin  Int
+  closeMin Int
+}
+
+model TimeOff {
+  id       Int      @id @default(autoincrement())
+  barber   Barber   @relation(fields: [barberId], references: [id])
+  barberId Int
+  start    DateTime
+  end      DateTime
+  reason   String?
+}
+
+model Appointment {
+  id         Int        @id @default(autoincrement())
+  customer   User       @relation("customerAppointments", fields: [customerId], references: [id])
+  customerId Int
+  barber     Barber     @relation("barberAppointments", fields: [barberId], references: [id])
+  barberId   Int
+  service    Service    @relation(fields: [serviceId], references: [id])
+  serviceId  Int
+  start      DateTime
+  end        DateTime
+  status     ApptStatus @default(BOOKED)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@index([barberId, start])
+  @@index([customerId, start])
+}
+
 enum Role { ADMIN BARBER CUSTOMER }
 enum ApptStatus { BOOKED CANCELLED NO_SHOW DONE }

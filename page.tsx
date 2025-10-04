@@ -1,0 +1,1 @@
+import Link from 'next/link'; export default function Page(){ return(<div className='bg-white border rounded p-6'><h1 className='text-2xl font-semibold'>Bem-vindo</h1><p className='mt-2 text-gray-600'>Agendamentos online da barbearia.</p><div className='mt-4'><Link href='/agendar' className='px-4 py-2 bg-black text-white rounded'>Agendar</Link></div></div>); }

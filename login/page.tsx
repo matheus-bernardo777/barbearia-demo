@@ -1,0 +1,6 @@
+'use client'; import { signIn } from "next-auth/react"; import { useState } from "react";
+export default function Login(){ const [email,setEmail]=useState(''); const [password,setPassword]=useState(''); return(<div className="max-w-md mx-auto bg-white border rounded p-6">
+<h1 className="text-xl font-semibold mb-4">Entrar</h1><label className="block text-sm">Email</label><input className="w-full border rounded px-3 py-2" value={email} onChange={e=>setEmail(e.target.value)} placeholder="admin@demo.com"/>
+<label className="block text-sm mt-2">Senha</label><input className="w-full border rounded px-3 py-2" type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="admin123"/>
+<button className="mt-4 w-full bg-black text-white px-3 py-2 rounded" onClick={()=>signIn('credentials',{email,password,callbackUrl:'/'})}>Entrar</button>
+<div className="text-xs text-gray-500 mt-4">Admin: admin@demo.com / admin123 — Barbeiro: barbeiro@demo.com / barber123 — Cliente: cliente@demo.com / cliente123</div></div>); }

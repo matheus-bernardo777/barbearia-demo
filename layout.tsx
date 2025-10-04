@@ -1,0 +1,7 @@
+import "./globals.css"; import Link from "next/link"; import { auth, signOut } from "@/lib/auth";
+export const metadata={ title:"Barbearia Demo", description:"Agendamentos" };
+export default async function RootLayout({children}:{children:React.ReactNode}){ const session=await auth(); const role=(session as any)?.role;
+  return(<html lang="pt-BR"><body className="min-h-screen bg-gray-50 text-gray-900"><header className="border-b bg-white"><nav className="mx-auto max-w-5xl flex items-center justify-between p-4">
+    <div className="flex items-center gap-4"><Link href="/" className="font-bold">Barbearia Demo</Link><Link href="/agendar" className="text-sm hover:underline">Agendar</Link>{role==="ADMIN"&&<Link href="/admin" className="text-sm hover:underline">Admin</Link>}{role==="BARBER"&&<Link href="/staff" className="text-sm hover:underline">Staff</Link>}{role&&<Link href="/minha-conta" className="text-sm hover:underline">Minha conta</Link>}</div>
+    <div>{!role? <Link href="/login" className="px-3 py-1 border rounded">Entrar</Link> : <form action={async()=>{'use server'; await signOut();}}><button className="px-3 py-1 border rounded">Sair</button></form>}</div>
+  </nav></header><main className="mx-auto max-w-5xl p-4">{children}</main></body></html>); }

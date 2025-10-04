@@ -32,54 +32,54 @@ model Barber {
 }
 
 model Service {
-  id           Int             @id @default(autoincrement())
-  name         String
-  durationMin  Int
-  priceCents   Int
-  bufferMin    Int             @default(10)
-  active       Boolean         @default(true)
-  barbers      BarberService[]
+  id          Int             @id @default(autoincrement())
+  name        String
+  durationMin Int
+  priceCents  Int
+  bufferMin   Int             @default(10)
+  active      Boolean         @default(true)
+  barbers     BarberService[]
   appointments Appointment[]
 }
 
 model BarberService {
-  barber     Barber  @relation(fields: [barberId], references: [id])
-  barberId   Int
-  service    Service @relation(fields: [serviceId], references: [id])
-  serviceId  Int
+  barber    Barber   @relation(fields: [barberId], references: [id])
+  barberId  Int
+  service   Service  @relation(fields: [serviceId], references: [id])
+  serviceId Int
 
   @@id([barberId, serviceId])
 }
 
 model BusinessHour {
-  id        Int @id @default(autoincrement())
-  weekday   Int
-  openMin   Int
-  closeMin  Int
+  id       Int @id @default(autoincrement())
+  weekday  Int
+  openMin  Int
+  closeMin Int
 }
 
 model TimeOff {
-  id        Int       @id @default(autoincrement())
-  barber    Barber    @relation(fields: [barberId], references: [id])
-  barberId  Int
-  start     DateTime
-  end       DateTime
-  reason    String?
+  id       Int      @id @default(autoincrement())
+  barber   Barber   @relation(fields: [barberId], references: [id])
+  barberId Int
+  start    DateTime
+  end      DateTime
+  reason   String?
 }
 
 model Appointment {
-  id          Int          @id @default(autoincrement())
-  customer    User         @relation("customerAppointments", fields: [customerId], references: [id])
+  id          Int         @id @default(autoincrement())
+  customer    User        @relation("customerAppointments", fields: [customerId], references: [id])
   customerId  Int
-  barber      Barber       @relation("barberAppointments", fields: [barberId], references: [id])
+  barber      Barber      @relation("barberAppointments", fields: [barberId], references: [id])
   barberId    Int
-  service     Service      @relation(fields: [serviceId], references: [id])
+  service     Service     @relation(fields: [serviceId], references: [id])
   serviceId   Int
   start       DateTime
   end         DateTime
-  status      ApptStatus   @default(BOOKED)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  status      ApptStatus  @default(BOOKED)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   @@index([barberId, start])
   @@index([customerId, start])
